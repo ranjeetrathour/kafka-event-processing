@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/data-consumer
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+kafka:
+  bootstrap-servers: localhost:9092
+  topic: complex-events
+  group-id: consumer-group-1
+
+logging:
+  level:
+    root: INFO
+    com.example.consumer: DEBUG
+
+software:
+  internal: 12452627367627643
+
