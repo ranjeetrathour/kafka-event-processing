@@ -20,11 +20,5 @@ public class EventPayload {
     @Column(name = "text", columnDefinition = "text")
     private String text;
 
-    @Column(name = "sentiment")
-    private Double sentimentScore;
-
-    @Column(name = "metadata_json", columnDefinition = "text")
-    private String metadataJson;
-
 }
 
