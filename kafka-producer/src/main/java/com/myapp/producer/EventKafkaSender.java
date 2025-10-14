@@ -18,6 +18,11 @@ public class EventKafkaSender {
     private final KafkaTemplate<String, ComplexEventDto> kafkaTemplate;
     private final KafkaProperties kafkaProperties;
 
+    /**
+     * Sends ComplexEventDto data to Kafka after an event is triggered.
+     *
+     * @param dto the event DTO to send
+     */
     public void send(ComplexEventDto dto) {
         kafkaTemplate.send(kafkaProperties.getTopic(), String.valueOf(dto.getId()), dto)
                 .whenComplete((result, ex) -> {

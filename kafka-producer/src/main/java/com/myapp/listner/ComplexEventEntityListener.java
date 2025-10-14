@@ -27,7 +27,9 @@ public class ComplexEventEntityListener {
     private final CryptoService cryptoService;
 
     /**
-     * @param event
+     * Listens for ComplexEventCreatedEvent and sends the event to Kafka.
+     *
+     * @param event the event triggered when a ComplexEvent is created
      */
     @EventListener
     public void handleComplexEvent(ComplexEventCreatedEvent event) {

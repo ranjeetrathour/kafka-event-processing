@@ -24,6 +24,13 @@ public class ComplexEventService {
     private final EventMapper eventMapper;
     private final ApplicationEventPublisher applicationEventPublisher;
 
+    /**
+     * Saves a new Event to the database and publishes a Spring event
+     * so it can be sent to Kafka asynchronously.
+     *
+     * @param request the request containing event data (payload)
+     * @return the saved event
+     */
     public ComplexEvent createEvent(EventRequest request) {
         if (Objects.isNull(request)) {
             throw new GenericException(HttpStatus.BAD_REQUEST.value(), Constants.EVENT_ENTITY_CAN_NOT_BE_NULL);
