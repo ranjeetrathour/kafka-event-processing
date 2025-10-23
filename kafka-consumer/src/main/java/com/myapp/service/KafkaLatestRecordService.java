@@ -31,9 +31,11 @@ public class KafkaLatestRecordService {
      * This method fetches the latest record from the given Kafka topic.
      * We use ConsumerFactory so that we can reuse the existing Spring Kafka configuration
      * (like bootstrap servers, group id, deserializers) instead of creating new properties each time.
-     * seekToEnd() moves the cursor directly to the last offset, so we always get the latest message
+     * seekToEnd() jump to directly to the last offset, so we always get the latest message
      * without scanning the entire partition. This is also better for performance, especially for large topics.
      * After fetching the record, we decrypt the payload and metadata to get the original data back.
+     * We also compare the latest message with the previous one based on ID and time
+     * to make sure we don't return duplicate data again within a short time.
      */
     public Optional<ComplexEventDto> fetchLatestRecord() {
         try (var consumer = consumerFactory.createConsumer()) {
@@ -55,11 +57,14 @@ public class KafkaLatestRecordService {
             ComplexEventDto dto = record.value();
             dto.setPayloadJson(cryptoService.decrypt(dto.getPayloadJson()));
             dto.setMetadataJson(cryptoService.decrypt(dto.getMetadataJson()));
-
+            long currentTime = System.currentTimeMillis();
             if (dto.getId() != null && dto.getId().equals(lastFetchedMessageId)) {
-                log.info("No new message since last fetch (same message ID)");
-                return Optional.of(createEmptyDto("No new message since last fetch"));
+                if ((currentTime - lastFetchedTimestamp) < 1000) {
+                    log.info("No new event come in last one second");
+                    return Optional.of(createEmptyDto("No new event fetch"));
+                }
             }
+
             lastFetchedMessageId = dto.getId();
             lastFetchedTimestamp = System.currentTimeMillis();
 
