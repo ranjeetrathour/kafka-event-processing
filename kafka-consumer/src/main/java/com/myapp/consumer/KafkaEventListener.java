@@ -14,6 +14,11 @@ public class KafkaEventListener {
     private final ComplexEventConsumerService service;
     private final KafkaProperties kafkaProperties;
 
+    /**
+     * listen kafka topic and process event to save event into db
+     *
+     * @param dto dto json data receive from topic
+     */
     @KafkaListener(
             topics = "complex-events",
             groupId = "consumer-group-1"

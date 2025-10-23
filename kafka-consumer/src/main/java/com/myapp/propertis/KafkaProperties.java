@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 public class KafkaProperties {
     private String bootstrapServers;
     private String topic;
-    private String keySerializer;
-    private String valueSerializer;
+    private String keyDeserializer;
+    private String valueDeserializer;
     private String groupId;
+    private int partition;
 }
