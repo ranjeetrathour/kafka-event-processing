@@ -23,6 +23,10 @@ public class KafkaLatestRecordService {
     private final ConsumerFactory<String, ComplexEventDto> consumerFactory;
     private final CryptoService cryptoService;
 
+
+    private String lastFetchedMessageId = null;
+    private long lastFetchedTimestamp = 0;
+
     /**
      * This method fetches the latest record from the given Kafka topic.
      * We use ConsumerFactory so that we can reuse the existing Spring Kafka configuration
@@ -44,11 +48,21 @@ public class KafkaLatestRecordService {
             }
             consumer.seek(partition, endOffset - 1);
             var records = consumer.poll(Duration.ofMillis(200));
-            if (records.isEmpty()) return Optional.of(createEmptyDto("No records returned from poll"));
+            if (records.isEmpty()) {
+                return Optional.of(createEmptyDto("No records returned from poll"));
+            }
             var record = records.records(partition).stream().findFirst().get();
             ComplexEventDto dto = record.value();
             dto.setPayloadJson(cryptoService.decrypt(dto.getPayloadJson()));
             dto.setMetadataJson(cryptoService.decrypt(dto.getMetadataJson()));
+
+            if (dto.getId() != null && dto.getId().equals(lastFetchedMessageId)) {
+                log.info("No new message since last fetch (same message ID)");
+                return Optional.of(createEmptyDto("No new message since last fetch"));
+            }
+            lastFetchedMessageId = dto.getId();
+            lastFetchedTimestamp = System.currentTimeMillis();
+
             return Optional.of(dto);
 
         } catch (Exception e) {
