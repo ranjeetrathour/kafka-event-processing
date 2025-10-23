@@ -1,9 +1,8 @@
 package com.myapp.event;
 
+import com.myapp.domain.ComplexEvent;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-
-import com.myapp.domain.ComplexEvent;
 
 /**
  * this is an event which will be trigger after saving the data
@@ -11,6 +10,7 @@ import com.myapp.domain.ComplexEvent;
 @Getter
 public class ComplexEventCreatedEvent extends ApplicationEvent {
     private final ComplexEvent complexEvent;
+
 
     public ComplexEventCreatedEvent(Object source, ComplexEvent complexEvent) {
         super(source);

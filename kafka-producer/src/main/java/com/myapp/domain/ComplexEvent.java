@@ -1,6 +1,5 @@
 package com.myapp.domain;
 
-import com.myapp.listner.ComplexEventEntityListener;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +12,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "complex_event")
-@EntityListeners(ComplexEventEntityListener.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

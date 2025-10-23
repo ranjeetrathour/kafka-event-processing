@@ -28,3 +28,13 @@ server:
 
 software:
   internal: 12452627367627643
+
+
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  packages-to-scan: com.myapp
+  paths-to-match: /**

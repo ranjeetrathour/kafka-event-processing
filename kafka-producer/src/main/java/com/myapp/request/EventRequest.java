@@ -12,7 +12,4 @@ public class EventRequest {
     private String userId;
     private String text;
     private String metadataJson;
-    private String sourceSystem;
-    private String sourceVersion;
-    private String originIp;
 }

@@ -12,6 +12,7 @@ import org.example.exception.GenericException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -24,13 +25,16 @@ public class ComplexEventService {
     private final EventMapper eventMapper;
     private final ApplicationEventPublisher applicationEventPublisher;
 
+
     /**
      * Saves a new Event to the database and publishes a Spring event
      * so it can be sent to Kafka asynchronously.
      *
-     * @param request the request containing event data (payload)
-     * @return the saved event
+     * @param request the event request to persist
+     * @return the saved ComplexEvent
      */
+
+    @Transactional
     public ComplexEvent createEvent(EventRequest request) {
         if (Objects.isNull(request)) {
             throw new GenericException(HttpStatus.BAD_REQUEST.value(), Constants.EVENT_ENTITY_CAN_NOT_BE_NULL);
